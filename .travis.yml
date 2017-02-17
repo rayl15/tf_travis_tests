@@ -10,5 +10,5 @@ before_install:
   - sudo unzip -d /usr/local/bin/ /tmp/terraform.zip
 
 script:
-  - BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-TRAVIS_BRANCH}
+  - BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
   - curl -o- -L https://raw.githubusercontent.com/freeletics-engineering/terraform_travis_tests/${BRANCH}/install.sh | sh -s -- ${BRANCH} ${PWD}
