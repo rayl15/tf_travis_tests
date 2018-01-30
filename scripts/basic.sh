@@ -17,10 +17,11 @@ else
     exit 1
 fi
 
-if terraform get -update=true $DIR; then
+if terraform init -backend=false -get=true -get-plugins=true $DIR; then
     printf "$GREEN Dependant modules installed $RESET\n"
+    printf "$GREEN Dependant plugins (for providers) installed $RESET\n"
 else
-    printf "$RED Unable to fetch dependant modules.$RESET\n"
+    printf "$RED Unable to fetch dependant modules/plugins.$RESET\n"
     exit 2
 fi
 
