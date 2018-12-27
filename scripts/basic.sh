@@ -17,7 +17,7 @@ else
     exit 1
 fi
 
-if terraform init -backend=false -get=true -get-plugins=true $DIR; then
+if terraform init $DIR; then
     printf "$GREEN Dependant modules installed $RESET\n"
     printf "$GREEN Dependant plugins (for providers) installed $RESET\n"
 else
