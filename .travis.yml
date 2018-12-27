@@ -2,8 +2,8 @@ language: c
 
 env:
   matrix:
-    - TF_VERSION=0.8.6
-    - TF_VERSION=0.7.13
+    - TF_VERSION=v0.11.10
+    - TF_VERSION=v0.11.10
 
 before_install:
   - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip -O /tmp/terraform.zip
