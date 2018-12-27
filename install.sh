@@ -12,4 +12,4 @@ terraform_travis_tests() {
 }
 
 cd ~
-terraform_travis_tests $1 $2
+terraform_travis_tests $1
