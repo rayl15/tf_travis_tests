@@ -1,30 +1,23 @@
-dist: trusty
-sudo: false
-
-branches:
-  only:
-    - master
-
+language: bash
+cache:
+  directories:
+    - .terraform
 env:
-  # This environment variable tells Terraform not to prompt for input. This is
-  # not required, but if we make a mistake, the Travis builder will hang waiting
-  # for user input, tieing up unnecessary resources.
-  - TF_INPUT=false
-
-# Install terraform
+  global:
+    - TFLINT_VER='v0.7.1'
+    - TERRAFORM_VER='0.11.7'
 before_install:
-  - curl -sLo /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
-  - unzip /tmp/terraform.zip -d /tmp
-  #- mkdir ~/bin
-  - mv /tmp/terraform ~/bin
-  - export PATH="~/bin:$PATH"
-  - terraform init
-  
-script: terraform plan
-
-deploy:
-- provider: script
-  skip_cleanup: true
-  script: terraform apply ./terraform
-  on:
-    branch: master
+  # Install Terraform
+  - "wget https://releases.hashicorp.com/terraform/0.11.7/terraform_${TERRAFORM_VER}_linux_amd64.zip"
+  - "unzip terraform_${TERRAFORM_VER}_linux_amd64.zip && chmod +x terraform"
+  # Install dependencies
+  - "./terraform init"
+  - "./terraform fmt"
+script:
+  # Test case
+  - "./terraform plan"
+  # terraform apply deploy
+after_success:
+  - "./terraform apply -auto-approve"
+notifications:
+  email: false
