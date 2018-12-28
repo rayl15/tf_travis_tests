@@ -1,16 +1,29 @@
-sudo: required
+dist: trusty
+sudo: false
 
-language: c
+branches:
+  only:
+    - master
 
 env:
-  matrix:
-    - TF_VERSION=v0.11.10
-    - TF_VERSION=v0.11.10
+  # This environment variable tells Terraform not to prompt for input. This is
+  # not required, but if we make a mistake, the Travis builder will hang waiting
+  # for user input, tieing up unnecessary resources.
+  - TF_INPUT=false
 
+# Install terraform
 before_install:
-  - wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip -O /tmp/terraform.zip
-  - sudo unzip -d /usr/local/bin/ /tmp/terraform.zip
+  - curl -sLo /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
+  - unzip /tmp/terraform.zip -d /tmp
+  - mkdir ~/bin
+  - mv /tmp/terraform ~/bin
+  - export PATH="~/bin:$PATH"
 
-script:
-  - BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
-  - curl -o- -L https://raw.githubusercontent.com/freeletics-engineering/terraform_travis_tests/${BRANCH}/install.sh | sh -s -- ${BRANCH} ${PWD}
+script: terraform plan ./terraform
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  #script: terraform apply ./terraform
+  on:
+    branch: master
